@@ -1,9 +1,12 @@
-package com.example.pp_3_1_1.service;
+package com.example.pp_3_1_1.dao;
+
 
 import com.example.pp_3_1_1.entity.User;
+
 import java.util.List;
 
-public interface UserService {
+
+public interface UserDao {
 
     void addUser(User user);
 
@@ -15,3 +18,4 @@ public interface UserService {
 
     List<User> getAllUsers();
 }
+

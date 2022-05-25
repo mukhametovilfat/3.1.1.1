@@ -2,21 +2,23 @@ package com.example.pp_3_1_1.controller;
 
 import com.example.pp_3_1_1.entity.User;
 import com.example.pp_3_1_1.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
+    private final UserService userService;
 
-    private UserService userService;
-
-    @Autowired
-    public void setUserService(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
+
 
     @GetMapping()
     public String allUsers(Model model) {
@@ -31,9 +33,14 @@ public class UserController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user) {
-        userService.addUpdateUser(user);
-        return "redirect:/users";
+    public String createUser(@Valid @ModelAttribute("user") User user,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "add";
+        } else {
+            userService.addUser(user);
+            return "redirect:/users";
+        }
     }
 
     @GetMapping("/{id}/edit")
@@ -43,9 +50,14 @@ public class UserController {
     }
 
     @PostMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user) {
-        userService.addUpdateUser(user);
-        return "redirect:/users";
+    public String updateUser(@Valid @ModelAttribute("user") User user,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "add";
+        } else {
+            userService.updateUser(user);
+            return "redirect:/users";
+        }
     }
 
     @GetMapping("/{id}/delete")
